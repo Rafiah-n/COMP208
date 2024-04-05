@@ -9,7 +9,7 @@ CREATE TABLE User(
 
 CREATE TABLE Friend_list(
   friend_name VARCHAR(100),
-  user_name VARCHAR(100)
+  username VARCHAR(100)
   );
   
 
