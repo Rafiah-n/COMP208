@@ -1,4 +1,4 @@
-CREATE TABLE Signup(
+CREATE TABLE Sign_up(
   name VARCHAR(100),
   age INT,
   username VARCHAR(100),
