@@ -1,4 +1,4 @@
-CREATE TABLE Sign_up(
+CREATE TABLE User(
   name VARCHAR(100),
   age INT,
   username VARCHAR(100),
@@ -6,7 +6,9 @@ CREATE TABLE Sign_up(
   repeat_password VARCHAR(100),
   email VARCHAR(100)
   );
-  
+
+CREATE TABLE Friend_list(
+  friend 
   
 
 
