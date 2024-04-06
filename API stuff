@@ -1,0 +1,91 @@
+All stuff here is basic short explanation on how to do the thing
+1. Set Up Your Project with Dependencies
+   Ensure your Java project is set up with the necessary libraries for HTTP requests and JSON parsing. 
+   If you're using Maven, you can add dependencies for HttpClient (for making HTTP requests) 
+   and Gson (for JSON parsing) in your pom.xml file:
+
+<!-- HttpClient for making HTTP requests -->
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.13</version>
+</dependency>
+
+<!-- Gson for JSON parsing -->
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.6</version>
+</dependency>
+
+
+2. Making a Request to TMDb API
+   Create a method to make HTTP requests to the TMDb API. You'll need to use your API key in these requests
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+public class TmdbApi {
+    private static final String API_KEY = "your_api_key_here";
+    private static final String BASE_URL = "https://api.themoviedb.org/3/movie/popular?api_key=";
+
+    public static String fetchPopularMovies() {
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpGet request = new HttpGet(BASE_URL + API_KEY);
+            var response = client.execute(request);
+            return EntityUtils.toString(response.getEntity());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+
+
+3. Parsing the JSON Response
+   Use Gson to parse the JSON response from the TMDb API into Java objects. 
+   First, create classes that represent the structure of the JSON data you're interested in.
+
+public class MovieResponse {
+    List<Movie> results;
+}
+
+public class Movie {
+    String title;
+    String overview;
+    String etc...;
+    // Add other fields as needed
+}
+
+
+4. Then, parse the response using Gson:
+
+import com.google.gson.Gson;
+
+public static List<Movie> getPopularMovies() {
+    String jsonResponse = fetchPopularMovies();
+    Gson gson = new Gson();
+    MovieResponse movieResponse = gson.fromJson(jsonResponse, MovieResponse.class);
+    return movieResponse.results;
+}
+
+
+N.B. 
+I'm familiar with parsing JSON data from my older assignment i'm just confused with number 1, 
+here we use GSON in swift we basically have JSONdecoder, it's built in
+also swift is quite similar to python, if you want i could definitely paste my old code in one of the file
+
+
+5. Integrating with Your Application
+   Now that you can fetch and parse movie data, integrate this functionality into your application where needed. 
+   For example, when a user requests movie recommendations, you could call getPopularMovies() to fetch and display them.
+
+6. Error Handling
+   Make sure to add proper error handling around your HTTP requests and JSON parsing. 
+   Handle scenarios where the API might be down, the response is not in the expected format, or your API key is invalid.
+
+7. Keep the API key secure and do not hard-code it into your source code if the code will be shared publicly.
+   Respect TMDb's API rate limits. Implement caching strategies if necessary to minimize the number of requests.
+   Expand your implementation as needed to include other types of requests, like searching for movies based on specific criteria or fetching movie details by ID.
