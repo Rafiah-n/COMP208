@@ -89,3 +89,72 @@ also swift is quite similar to python, if you want i could definitely paste my o
 7. Keep the API key secure and do not hard-code it into your source code if the code will be shared publicly.
    Respect TMDb's API rate limits. Implement caching strategies if necessary to minimize the number of requests.
    Expand your implementation as needed to include other types of requests, like searching for movies based on specific criteria or fetching movie details by ID.
+
+
+
+With Python:
+
+If you decide to use Python for your project, integrating with the TMDb API becomes a straightforward task, 
+especially with libraries like requests for HTTP calls and json for handling JSON data, 
+which are both very user-friendly. Below is a simple guide on how to achieve this.
+
+1. Setting Up Your Environment
+Ensure you have Python installed on your system. You'll also need to install the requests library if it's not already installed,
+which you can do via pip:
+
+pip install requests
+
+2. Making a Request to TMDb API
+   You'll first write a function to make requests to the TMDb API using your API key. Replace "your_api_key_here" with your actual API key.
+
+import requests
+
+def fetch_popular_movies(api_key):
+    base_url = "https://api.themoviedb.org/3/movie/popular"
+    params = {
+        "api_key": api_key
+    }
+    response = requests.get(base_url, params=params)
+    return response.json()  # Converts the JSON response to a Python dictionary
+
+
+3. Parsing the JSON Response
+   The requests library automatically decodes the JSON response into a Python dictionary, making it easy to work with:
+
+def get_popular_movies(api_key):
+    movies_json = fetch_popular_movies(api_key)
+    movies = movies_json.get('results', [])
+    for movie in movies:
+        print(movie['title'], movie['overview'])
+
+This function fetches the list of popular movies and prints each movie's title and overview. 
+You can adjust the printing or handling logic based on how you wish to use the movie data in your application.
+
+4. Integrating with Your Application
+   You can now call get_popular_movies() wherever you need to display or work with popular movie data in your application. 
+   Make sure to pass your TMDb API key as an argument to the function.
+   Example Usage:
+api_key = "your_api_key_here"
+get_popular_movies(api_key)
+
+
+5. Error Handling
+   It's important to add error handling to manage scenarios where the API might not be accessible or the response is not as expected:
+
+def fetch_popular_movies(api_key):
+    base_url = "https://api.themoviedb.org/3/movie/popular"
+    params = {"api_key": api_key}
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()  # Raises an exception for 4XX or 5XX status codes
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching data from TMDb: {e}")
+        return {}
+
+Additional Considerations
+Rate Limiting: Keep in mind the rate limits of the TMDb API to avoid hitting them. Implement caching if necessary.
+API Key Security: Avoid hardcoding your API key directly in the source code, especially if the code is going to be public. 
+                  Consider using environment variables or secure key management services.
+Further Exploration: Once comfortable with fetching popular movies, you might explore other endpoints of the TMDb API, like searching for movies, 
+                     fetching detailed movie information, or integrating user preferences into the search queries.
